@@ -2,187 +2,34 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Portal Ujian Fisika</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portal Sekolah</title>
 <style>
-  :root {
-    --paper: #f3f6f4;
-    --grid: #d5ded9;
-    --ink: #12303a;
-    --muted: #4f6870;
-    --accent: #e8a317;
-    --accent-ink: #2b1d00;
-    --card: #ffffff;
-    --line: #b9c7c2;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --paper: #0f1d22;
-      --grid: #1b2f36;
-      --ink: #e6f0ee;
-      --muted: #9db4b8;
-      --card: #162830;
-      --line: #2c444c;
-    }
-  }
-  * { box-sizing: border-box; }
-  html, body { height: 100%; margin: 0; }
-  body {
-    font-family: "Instrument Sans", system-ui, sans-serif;
-    color: var(--ink);
-    background-color: var(--paper);
-    background-image:
-      linear-gradient(var(--grid) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-    background-size: 28px 28px;
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
-  }
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-    padding: 16px clamp(16px, 4vw, 40px);
-    background: var(--card);
-    border-bottom: 3px solid var(--accent);
-  }
-  h1 {
-    font-family: "Fraunces", Georgia, serif;
-    font-size: clamp(1.25rem, 3vw, 1.75rem);
+  html, body {
     margin: 0;
-    line-height: 1.2;
-  }
-  .sub { margin: 2px 0 0; color: var(--muted); font-size: .95rem; }
-  .actions { display: flex; gap: 10px; flex-wrap: wrap; }
-  button, a.btn {
-    font: inherit;
-    font-weight: 600;
-    padding: 10px 16px;
-    border-radius: 8px;
-    border: 1.5px solid var(--ink);
-    background: transparent;
-    color: var(--ink);
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-  }
-  button.primary, a.btn.primary {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--accent-ink);
-  }
-  button:hover, a.btn:hover { filter: brightness(1.06); }
-  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-
-  main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: clamp(12px, 3vw, 28px) clamp(16px, 4vw, 40px);
-    gap: 14px;
-  }
-  .notice {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-left: 5px solid var(--accent);
-    border-radius: 8px;
-    padding: 12px 16px;
-    font-size: .95rem;
-    max-width: 80ch;
-  }
-  .frame-wrap {
-    flex: 1;
-    min-height: 70vh;
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 10px;
+    padding: 0;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
-    position: relative;
+    background: #111;
   }
-  iframe { width: 100%; height: 100%; min-height: 70vh; border: 0; display: block; }
-  .empty {
-    position: absolute; inset: 0;
-    display: none;
-    place-items: center;
-    text-align: center;
-    padding: 24px;
+  iframe {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    border: 0;
+    display: block;
   }
-  .empty.show { display: grid; }
-  .empty code { background: var(--paper); padding: 2px 6px; border-radius: 4px; }
-  footer { padding: 12px 16px 20px; text-align: center; color: var(--muted); font-size: .85rem; }
 </style>
 </head>
 <body>
-
-<header>
-  <div>
-    <h1 id="judul">Portal Ujian Fisika</h1>
-    <p class="sub" id="subjudul"></p>
-  </div>
-  <div class="actions">
-    <button type="button" id="btn-layar" class="primary">Layar penuh</button>
-    <a class="btn" id="btn-tab" href="#" target="_blank" rel="noopener">Buka di tab baru</a>
-  </div>
-</header>
-
-<main>
-  <div class="notice" id="petunjuk"></div>
-  <div class="frame-wrap" id="frame-wrap">
-    <iframe id="ujian" title="Formulir ujian" loading="lazy" allowfullscreen></iframe>
-    <div class="empty" id="kosong">
-      <p>Tautan ujian belum diisi.<br>Buka <code>index.html</code>, lalu isi <code>URL_UJIAN</code> pada bagian <code>KONFIGURASI</code>.</p>
-    </div>
-  </div>
-</main>
-
-<footer id="footer"></footer>
-
-<script>
-  // ==================== KONFIGURASI (ubah di sini saja) ====================
-  const KONFIGURASI = {
-    // Tempel tautan ujian di bawah ini.
-    // Google Apps Script: tautan web app yang berakhiran /exec.
-    // (Google Form: pakai tautan formulir + "?embedded=true")
-    URL_UJIAN: "https://script.google.com/macros/s/AKfycbx76rVnxEfS5UHYSUOF5lq7hhzLPApUPsnd59S7PnN9JgSnlNJIR57eIuAFITFf0Xg-uQ/exec",
-
-    JUDUL: "Portal Ujian Fisika",
-    SUBJUDUL: "Kelas XI · Tahun Ajaran 2025/2026",
-    PETUNJUK: "Isi nama dan kelas dengan benar. Kerjakan sendiri, jangan menutup halaman sebelum menekan tombol Kirim.",
-    FOOTER: "Jika formulir tidak tampil, tekan \"Buka di tab baru\"."
-  };
-  // =========================================================================
-
-  const $ = (id) => document.getElementById(id);
-  document.title = KONFIGURASI.JUDUL;
-  $("judul").textContent = KONFIGURASI.JUDUL;
-  $("subjudul").textContent = KONFIGURASI.SUBJUDUL;
-  $("petunjuk").textContent = KONFIGURASI.PETUNJUK;
-  $("footer").textContent = KONFIGURASI.FOOTER;
-
-  const url = KONFIGURASI.URL_UJIAN.trim();
-  if (url) {
-    $("ujian").src = url;
-    $("btn-tab").href = url;
-  } else {
-    $("kosong").classList.add("show");
-    $("ujian").style.display = "none";
-    $("btn-tab").style.display = "none";
-  }
-
-  $("btn-layar").addEventListener("click", () => {
-    const el = $("frame-wrap");
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-    } else if (el.requestFullscreen) {
-      el.requestFullscreen();
-    }
-  });
-</script>
+<iframe
+  src="https://script.google.com/macros/s/AKfycbx76rVnxEfS5UHYSUOF5lq7hhzLPApUPsnd59S7PnN9JgSnlNJIR57eIuAFITFf0Xg-uQ/exec"
+  title="Portal Sekolah"
+  allow="fullscreen; camera; microphone; geolocation; clipboard-write"
+  allowfullscreen>
+</iframe>
 </body>
 </html>
